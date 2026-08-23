@@ -1,0 +1,18 @@
+running develop
+running egg_info
+writing silla_ruedas.egg-info/PKG-INFO
+writing dependency_links to silla_ruedas.egg-info/dependency_links.txt
+writing entry points to silla_ruedas.egg-info/entry_points.txt
+writing requirements to silla_ruedas.egg-info/requires.txt
+writing top-level names to silla_ruedas.egg-info/top_level.txt
+reading manifest file 'silla_ruedas.egg-info/SOURCES.txt'
+writing manifest file 'silla_ruedas.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/python3.12/site-packages/silla-ruedas.egg-link (link to .)
+Installing evitar_obstaculos script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/Silla_ruedas
+Installing mapeo_autonomo script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/Silla_ruedas
+Installing send_goal script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/Silla_ruedas
+Installing telemetry_bridge script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/Silla_ruedas
+
+Installed /home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas
+running symlink_data

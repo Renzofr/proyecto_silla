@@ -1,0 +1,20 @@
+[2.397s] Invoking command in '/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/build --no-deps symlink_data
+[2.996s] running develop
+[3.357s] running egg_info
+[3.391s] writing silla_ruedas.egg-info/PKG-INFO
+[3.391s] writing dependency_links to silla_ruedas.egg-info/dependency_links.txt
+[3.392s] writing entry points to silla_ruedas.egg-info/entry_points.txt
+[3.392s] writing requirements to silla_ruedas.egg-info/requires.txt
+[3.392s] writing top-level names to silla_ruedas.egg-info/top_level.txt
+[3.466s] reading manifest file 'silla_ruedas.egg-info/SOURCES.txt'
+[3.468s] writing manifest file 'silla_ruedas.egg-info/SOURCES.txt'
+[3.509s] running build_ext
+[3.509s] Creating /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/python3.12/site-packages/silla-ruedas.egg-link (link to .)
+[3.510s] Installing evitar_obstaculos script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[3.511s] Installing mapeo_autonomo script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[3.511s] Installing send_goal script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[3.511s] Installing telemetry_bridge script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[3.512s] 
+[3.512s] Installed /home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas
+[3.512s] running symlink_data
+[3.587s] Invoked command in '/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/build --no-deps symlink_data
