@@ -99,13 +99,6 @@ source install/setup.bash
 ros2 launch silla_ruedas gazebo.launch.py rviz:=true
 ```
 
-Para usar el mundo del hospital:
-
-```bash
-ros2 launch silla_ruedas gazebo.launch.py \
-	world:=hospital_2habitaciones.sdf
-```
-
 ### Terminal 4: Nav2
 
 ```bash

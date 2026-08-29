@@ -1,0 +1,21 @@
+[0.895s] Invoking command in '/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/build --no-deps symlink_data
+[1.151s] running develop
+[1.317s] running egg_info
+[1.333s] writing silla_ruedas.egg-info/PKG-INFO
+[1.333s] writing dependency_links to silla_ruedas.egg-info/dependency_links.txt
+[1.333s] writing entry points to silla_ruedas.egg-info/entry_points.txt
+[1.333s] writing requirements to silla_ruedas.egg-info/requires.txt
+[1.333s] writing top-level names to silla_ruedas.egg-info/top_level.txt
+[1.365s] reading manifest file 'silla_ruedas.egg-info/SOURCES.txt'
+[1.365s] writing manifest file 'silla_ruedas.egg-info/SOURCES.txt'
+[1.382s] running build_ext
+[1.382s] Creating /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/python3.12/site-packages/silla-ruedas.egg-link (link to .)
+[1.382s] Installing evitar_obstaculos script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[1.382s] Installing mapeo_autonomo script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[1.382s] Installing send_goal script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[1.383s] Installing telemetry_bridge script to /home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/silla_ruedas
+[1.383s] 
+[1.383s] Installed /home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas
+[1.383s] running symlink_data
+[1.384s] error: can't copy '/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/worlds/hospital_2habitaciones.sdf': doesn't exist or not a regular file
+[1.406s] Invoked command in '/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas' returned '1': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/renzofr/Proyecto_silla/wheel_ws/install/silla_ruedas/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/build --no-deps symlink_data

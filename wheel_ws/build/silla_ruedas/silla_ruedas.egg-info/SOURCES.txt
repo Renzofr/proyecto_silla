@@ -40,5 +40,4 @@ silla_ruedas.egg-info/top_level.txt
 silla_ruedas.egg-info/zip-safe
 urdf/silla_ruedas.csv
 urdf/silla_ruedas.urdf
-worlds/hospital_2habitaciones.sdf
 worlds/world.sdf
