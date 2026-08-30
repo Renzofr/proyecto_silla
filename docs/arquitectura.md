@@ -21,7 +21,7 @@ ROS 2
  └── SpO2
         │
         ▼
- ROS 2 WEB BRIDGE   (no incluido en este repo — futuro trabajo)
+ wheelchair_bridge  (repo wheelchair-ros)
         │
         ▼
    WebSocket  ──────────────────────►  Backend (FastAPI)
@@ -44,11 +44,12 @@ ROS 2
   que genera telemetría coherente (signos vitales, pose, LiDAR, navegación)
   y la publica por el mismo canal WebSocket que usaría un ROS 2 Web Bridge
   real.
-- Para conectar una silla ROS 2 real, se debe implementar un nodo/bridge
-  externo (`rclpy`) que se suscriba a `/scan`, `/odom`, `/tf` y a los
-  tópicos de signos vitales, transforme cada mensaje al mismo formato
-  JSON (`{"type": "...", "data": {...}}`) y lo publique llamando a
-  `ws_manager.broadcast(...)` — **sin tener que modificar el frontend**.
+- Para conectar una silla ROS 2 real está el paquete `wheelchair_bridge`
+  (repositorio [wheelchair-ros](https://github.com/Renzofr/wheelchair-ros)):
+  un nodo `rclpy` que se suscribe a `/scan` y `/odom`, transforma cada
+  mensaje al formato JSON (`{"type": "...", "data": {...}}`) y lo envía al
+  WebSocket de ingesta `/api/ws/telemetry/ingest` — **sin modificar el
+  frontend**. Al conectarse, el backend detiene el simulador interno solo.
 - El frontend nunca debe inventar datos: si el WebSocket se desconecta,
   el estado de conexión pasa a `DESCONECTADO` y dejan de actualizarse
   los valores en vivo.
@@ -140,12 +141,13 @@ Abre `http://localhost:5173`.
 
 ## Próximos pasos hacia ROS 2 real
 
-1. Crear un paquete ROS 2 (`chair_tracker_bridge`) con un nodo `rclpy` que:
-   - Se suscriba a `/scan`, `/odom`, `/tf`, y a los tópicos de signos vitales.
-   - Convierta cada mensaje a los tipos definidos en `backend/models/telemetry.py`.
-   - Publique al mismo WebSocket manager del backend (reemplazando al simulador).
-2. Añadir un selector real de modo en el backend (`SIMULATION` / `ROS2_REAL`) que
-   detenga el simulador interno cuando el bridge esté activo.
-3. Añadir exportación a PDF (actualmente solo CSV) con gráfica de signos vitales
+1. **Sensor real de signos vitales.** Hoy no existe ningún tópico ROS que
+   publique frecuencia cardíaca ni SpO₂: el puente los genera con los mismos
+   umbrales que el simulador. Cuando exista el hardware, suscribirse a su
+   tópico y lanzar el puente con `simulate_vitals:=false`.
+2. Añadir exportación a PDF (actualmente solo CSV) con gráfica de signos vitales
    e imagen del recorrido.
-4. Añadir autenticación básica si se despliega en un entorno clínico real.
+3. Añadir autenticación básica si se despliega en un entorno clínico real.
+
+Ya resuelto: el puente (`wheelchair_bridge`) y la conmutación automática de
+modo, que el backend decide según haya o no un puente conectado.

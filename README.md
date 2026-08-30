@@ -265,10 +265,22 @@ cd ~/wheel_ws/src/wheelchair_ros/docker  && docker compose down
 | API | http://localhost:8000/api |
 | Swagger | http://localhost:8000/docs |
 
-Sin el puente, la web muestra telemetría del **simulador interno** del
-backend. En cuanto el puente conecta, el backend apaga ese simulador y los
-datos pasan a ser los reales de Gazebo: elige un destino y la meta viaja hasta
-Nav2.
+### ¿De dónde vienen los datos?
+
+La barra superior lo indica siempre, y **no es un botón**: es un reflejo del
+estado real que decide el backend.
+
+| Indicador | Significado |
+|---|---|
+| 🟡 **Simulación activa** | No hay ningún puente conectado. La telemetría la genera el simulador interno del backend. |
+| 🟢 **ROS 2 conectado** | Un puente está enviando datos reales. El simulador se apagó solo. |
+
+En cuanto el puente conecta, el backend apaga el simulador y los datos pasan a
+ser los reales de Gazebo: elige un destino y la meta viaja hasta Nav2.
+
+El endpoint `GET /api/system/status` distingue lo mismo con dos campos
+separados: `ros2_connected` (hay un puente) y `simulation_active` (corre el
+simulador interno).
 
 > Lanza siempre **la web primero**. Si el puente arranca antes que el backend,
 > se queda reintentando hasta encontrarlo.
@@ -351,7 +363,8 @@ claves de `habitaciones.yaml`, que vive en el paquete `wheelchair_bringup`.
 | El frontend no recibe datos | Comprobar que responde http://localhost:8000/api/health y revisar `VITE_API_BASE_URL` en `frontend/.env`. |
 | `ModuleNotFoundError: uvicorn` | El `venv` es de otra máquina o de otra versión de Python. Bórralo y rehaz la instalación nativa. |
 | La web sigue en `DESCONECTADO` con el puente lanzado | El puente no alcanza el backend. Mira sus logs: reintenta cada pocos segundos e imprime el motivo. |
-| Los datos parecen inventados | Es el simulador interno. Solo se apaga cuando un puente conecta al `ingest`. |
+| Los datos parecen inventados | Mira el indicador de la barra superior. Si dice **Simulación activa**, son del simulador interno: lanza el puente. |
+| El indicador dice "Simulación activa" con el puente lanzado | El puente no llegó a conectar. Revisa sus logs: reintenta cada pocos segundos e imprime el motivo. |
 | `ModuleNotFoundError: websockets` en el puente | `sudo apt install python3-websockets` |
 
 Los problemas de la parte ROS (Gazebo, Nav2, TF, RViz) están en el
