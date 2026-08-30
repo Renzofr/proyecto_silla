@@ -19,8 +19,7 @@ Funciona de dos formas:
 - [Los dos repositorios](#los-dos-repositorios)
 - [Requisitos](#requisitos)
 - [Instalación](#instalación)
-- [Lanzar solo la web](#lanzar-solo-la-web)
-- [Lanzar el sistema completo](#lanzar-el-sistema-completo)
+- [Lanzar](#lanzar)
 - [El puente con ROS](#el-puente-con-ros)
 - [Solución de problemas](#solución-de-problemas)
 - [Documentación adicional](#documentación-adicional)
@@ -56,13 +55,13 @@ Para la web sola, basta con **una** de estas dos opciones:
 
 | Opción | Requisitos |
 |---|---|
-| **Docker** *(recomendado)* | Docker con `docker compose` v2 |
-| **Nativa** | Python 3.10+ y Node.js 18+ |
+| **Ubuntu 24.04 nativo** | Python 3.10+ y Node.js 18+ |
+| **Docker** *(alternativa)* | Docker con `docker compose` v2 |
 
-Con Docker no hace falta instalar Python ni Node: los trae la imagen.
+Para el sistema completo, además: ROS 2 Jazzy y Gazebo Harmonic, con el
+workspace ya montado según el repo de ROS.
 
-Para el sistema completo, además: Ubuntu 24.04, ROS 2 Jazzy y Gazebo Harmonic,
-con el workspace ya montado según el repo de ROS.
+Con Docker no hace falta instalar nada de eso: lo traen las imágenes.
 
 ---
 
@@ -79,23 +78,8 @@ Todas las rutas de este README asumen `~/wheelchair-web`.
 
 ### 2. Elegir cómo instalar
 
-<details>
-<summary><b>Con Docker (recomendado) — no instala nada en el sistema</b></summary>
-
-No hay paso de instalación: la primera vez que levantes el stack, Docker
-construye las imágenes solo.
-
-Salta directo a [Lanzar solo la web](#lanzar-solo-la-web).
-
-| Servicio | Imagen base | Puerto |
-|---|---|---|
-| `backend` | `python:3.12-slim` | 8000 |
-| `frontend` | `node:20-slim` | 5173 |
-
-</details>
-
-<details>
-<summary><b>Instalación nativa en Ubuntu 24.04</b></summary>
+<details open>
+<summary><b>En Ubuntu 24.04</b></summary>
 
 **Backend:**
 
@@ -124,72 +108,110 @@ Ajusta `VITE_API_BASE_URL` en `.env` solo si el backend no corre en
 
 </details>
 
+<details>
+<summary><b>Con Docker (alternativa) — no instala nada en el sistema</b></summary>
+
+No hay paso de instalación: la primera vez que levantes el stack, Docker
+construye las imágenes solo.
+
+Salta directo a [Lanzar](#lanzar).
+
+| Servicio | Imagen base | Puerto |
+|---|---|---|
+| `backend` | `python:3.12-slim` | 8000 |
+| `frontend` | `node:20-slim` | 5173 |
+
+</details>
+
 ---
 
-## Lanzar solo la web
+## Lanzar
 
-Sin ROS ni Gazebo. El backend genera telemetría simulada por el mismo
-WebSocket que usaría la silla real, así que la interfaz funciona completa.
+Dos entornos posibles. Elige uno y sigue solo ese bloque: dentro de cada uno
+está tanto la web sola como el sistema completo.
+
+Docker es la alternativa: sirve si no quieres instalar Python, Node, ROS ni
+Gazebo en tu máquina, o si necesitas que el entorno sea idéntico en varios
+equipos.
 
 <details open>
-<summary><b>Con Docker</b></summary>
+<summary><b>🐧 Con Ubuntu 24.04 nativo</b></summary>
+
+Requiere haber hecho la [instalación nativa](#instalación). Para el sistema
+completo, además ROS 2 Jazzy y Gazebo Harmonic, con el workspace ya compilado
+según el [repo de ROS](https://github.com/Renzofr/wheelchair-ros).
+
+#### Solo la web
+
+**Terminal 1 — Backend**
+
+```bash
+cd ~/wheelchair-web
+source backend/venv/bin/activate
+python -m uvicorn backend.server:app --reload --port 8000
+```
+
+**Terminal 2 — Frontend**
+
+```bash
+cd ~/wheelchair-web/frontend
+npm run dev
+```
+
+#### Sistema completo
+
+Las dos terminales anteriores, más estas dos:
+
+**Terminal 3 — La simulación**
+
+```bash
+cd ~/wheel_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 launch wheelchair_bringup simulation.launch.py
+```
+
+**Terminal 4 — El puente**
+
+```bash
+cd ~/wheel_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 run wheelchair_bridge telemetry_bridge
+```
+
+> Si ya tienes otro workspace cargado desde el `.bashrc` y ves conflictos,
+> añade `unset COLCON_PREFIX_PATH AMENT_PREFIX_PATH` antes de los `source`.
+
+</details>
+
+<details>
+<summary><b>🐳 Con Docker (alternativa)</b></summary>
+
+No necesitas Python, Node, ROS ni Gazebo instalados: todo va en contenedores.
+
+#### Solo la web
 
 ```bash
 cd ~/wheelchair-web/docker
 docker compose up --build
 ```
 
-Detener: `Ctrl+C` y después `docker compose down`.
+Detener con `Ctrl+C` y después `docker compose down`.
 
 El código está montado en vivo: editar un `.py` reinicia uvicorn y editar un
 `.jsx` recarga el navegador. Solo hay que repetir el `--build` si cambias
 `requirements.txt` o `package.json`.
 
-> Los comandos de Docker se ejecutan **desde `docker/`**, que es donde vive el
+> Los comandos se ejecutan **desde `docker/`**, que es donde vive el
 > `docker-compose.yml`. El contexto de build es la raíz del repositorio, así
 > que las imágenes sí ven `backend/` y `frontend/`.
 
-</details>
+#### Sistema completo
 
-<details>
-<summary><b>Nativo, en dos terminales</b></summary>
-
-```bash
-# Terminal 1 — Backend
-cd ~/wheelchair-web
-source backend/venv/bin/activate
-python -m uvicorn backend.server:app --reload --port 8000
-```
-
-```bash
-# Terminal 2 — Frontend
-cd ~/wheelchair-web/frontend
-npm run dev
-```
-
-</details>
-
-Cuando esté arriba:
-
-| | |
-|---|---|
-| **Interfaz** | http://localhost:5173 → pulsar **Iniciar sesión** |
-| API | http://localhost:8000/api |
-| Swagger | http://localhost:8000/docs |
-
----
-
-## Lanzar el sistema completo
-
-Web + simulación + puente. Siempre en este orden: **la web primero**, porque
-si el puente arranca antes que el backend se queda reintentando hasta que lo
-encuentra.
-
-<details open>
-<summary><b>Todo con Docker (recomendado)</b></summary>
-
-Necesitas los dos repositorios clonados. El de ROS trae su propio contenedor
-con Jazzy y Gazebo ya instalados.
+Necesitas también el repositorio
+[`wheelchair-ros`](https://github.com/Renzofr/wheelchair-ros) clonado: trae su
+propio contenedor con Jazzy y Gazebo ya instalados.
 
 **Terminal 1 — La web**
 
@@ -198,7 +220,7 @@ cd ~/wheelchair-web/docker
 docker compose up
 ```
 
-**Terminal 2 — El contenedor de ROS**
+**Terminal 2 — La simulación**
 
 ```bash
 cd ~/wheel_ws/src/wheelchair_ros/docker
@@ -229,60 +251,27 @@ ros2 run wheelchair_bridge telemetry_bridge
 Para detener todo:
 
 ```bash
-cd ~/wheelchair-web/docker           && docker compose down
-cd ~/wheel_ws/src/wheelchair_ros/docker && docker compose down
+cd ~/wheelchair-web/docker               && docker compose down
+cd ~/wheel_ws/src/wheelchair_ros/docker  && docker compose down
 ```
 
 </details>
 
-<details>
-<summary><b>Todo sin Docker, en Ubuntu 24.04</b></summary>
+### Una vez arriba
 
-Requiere ROS 2 Jazzy y Gazebo Harmonic instalados, y el workspace ya compilado
-según el [repo de ROS](https://github.com/Renzofr/wheelchair-ros).
+| | |
+|---|---|
+| **Interfaz** | http://localhost:5173 → pulsar **Iniciar sesión** |
+| API | http://localhost:8000/api |
+| Swagger | http://localhost:8000/docs |
 
-**Terminal 1 — Backend**
+Sin el puente, la web muestra telemetría del **simulador interno** del
+backend. En cuanto el puente conecta, el backend apaga ese simulador y los
+datos pasan a ser los reales de Gazebo: elige un destino y la meta viaja hasta
+Nav2.
 
-```bash
-cd ~/wheelchair-web
-source backend/venv/bin/activate
-python -m uvicorn backend.server:app --reload --port 8000
-```
-
-**Terminal 2 — Frontend**
-
-```bash
-cd ~/wheelchair-web/frontend
-npm run dev
-```
-
-**Terminal 3 — La simulación**
-
-```bash
-cd ~/wheel_ws
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-ros2 launch wheelchair_bringup simulation.launch.py
-```
-
-**Terminal 4 — El puente**
-
-```bash
-cd ~/wheel_ws
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-ros2 run wheelchair_bridge telemetry_bridge
-```
-
-> Si ya tienes otro workspace cargado desde el `.bashrc` y ves conflictos,
-> añade `unset COLCON_PREFIX_PATH AMENT_PREFIX_PATH` antes de los `source`.
-
-</details>
-
-En cuanto el puente conecta, el backend **apaga su simulador interno** y la web
-pasa a mostrar los datos reales de Gazebo. Abre http://localhost:5173, pulsa
-**Iniciar sesión** y elige un destino: la meta viaja hasta Nav2 y la silla se
-mueve.
+> Lanza siempre **la web primero**. Si el puente arranca antes que el backend,
+> se queda reintentando hasta encontrarlo.
 
 ---
 
