@@ -2172,5 +2172,115 @@ const CSS = `
   padding: 9px 10px; font-size: 13px; outline: none;
 }
 .modal-input:focus { border-color: var(--accent-blue); }
-`;
+  /* ================================================================
+     Estados de interaccion
+     Antes solo habia :hover en 8 elementos sueltos y ningun :active,
+     asi que al pulsar un boton no habia ninguna respuesta visual.
+     ================================================================ */
 
+  /* Todo lo pulsable comparte la misma transicion. */
+  .primary-btn, .danger-btn, .ghost-btn, .icon-btn, .back-btn,
+  .alert-ack-btn, .dest-clear-btn, .dest-chip, .sidenav-item,
+  .screen-action-btn, .screen-dest-btn, .screen-icon-action,
+  .screen-kiosk-btn {
+    transition: background 0.15s ease, border-color 0.15s ease,
+                color 0.15s ease, transform 0.08s ease,
+                box-shadow 0.15s ease, filter 0.15s ease;
+  }
+
+  /* --- Pulsacion: el gesto se hunde ligeramente ------------------- */
+  .primary-btn:active, .danger-btn:active, .ghost-btn:active,
+  .back-btn:active, .alert-ack-btn:active, .dest-clear-btn:active,
+  .dest-chip:active, .screen-dest-btn:active, .screen-kiosk-btn:active {
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.92);
+  }
+
+  .icon-btn:active, .screen-icon-action:active {
+    transform: scale(0.9);
+    filter: brightness(0.85);
+  }
+
+  /* Los botones tactiles de la Pantalla a Bordo se hunden mas: el dedo
+     tapa el boton y el unico feedback util es el movimiento. */
+  .screen-action-btn:active {
+    transform: scale(0.955);
+    filter: brightness(0.9);
+  }
+
+  /* --- Hover ------------------------------------------------------ */
+  .primary-btn:hover:not(:disabled) {
+    background: #6ba1f9;
+    box-shadow: 0 2px 12px rgba(79,143,247,0.35);
+  }
+
+  .danger-btn:hover:not(:disabled) {
+    background: rgba(244,97,75,0.22);
+    border-color: rgba(244,97,75,0.75);
+  }
+
+  .ghost-btn:hover:not(:disabled),
+  .back-btn:hover:not(:disabled),
+  .alert-ack-btn:hover:not(:disabled) {
+    background: var(--panel-2);
+    border-color: var(--text-faint);
+    color: var(--text);
+  }
+
+  .icon-btn:hover:not(:disabled) {
+    color: var(--text);
+    background: var(--panel-2);
+    border-radius: 6px;
+  }
+
+  .screen-action-btn:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+
+  .screen-kiosk-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  /* --- Deshabilitado: sin respuesta al puntero -------------------- */
+  .primary-btn:disabled, .danger-btn:disabled, .ghost-btn:disabled,
+  .icon-btn:disabled, .back-btn:disabled, .alert-ack-btn:disabled,
+  .screen-action-btn:disabled, .screen-dest-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    filter: none;
+    box-shadow: none;
+  }
+
+  /* --- Teclado: el foco debe verse, pero no al hacer clic --------- */
+  .primary-btn:focus-visible, .danger-btn:focus-visible,
+  .ghost-btn:focus-visible, .icon-btn:focus-visible,
+  .back-btn:focus-visible, .alert-ack-btn:focus-visible,
+  .dest-clear-btn:focus-visible, .dest-chip:focus-visible,
+  .sidenav-item:focus-visible, .screen-action-btn:focus-visible,
+  .screen-dest-btn:focus-visible, .screen-icon-action:focus-visible,
+  .screen-kiosk-btn:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  /* El indicador de modo ya no es un boton: no debe parecerlo. */
+  .mode-toggle { cursor: default; }
+
+  /* Respeta a quien pide menos animacion en el sistema. */
+  @media (prefers-reduced-motion: reduce) {
+    .primary-btn, .danger-btn, .ghost-btn, .icon-btn, .back-btn,
+    .alert-ack-btn, .dest-clear-btn, .dest-chip, .sidenav-item,
+    .screen-action-btn, .screen-dest-btn, .screen-icon-action,
+    .screen-kiosk-btn {
+      transition: none;
+    }
+    .primary-btn:active, .danger-btn:active, .ghost-btn:active,
+    .back-btn:active, .alert-ack-btn:active, .dest-clear-btn:active,
+    .dest-chip:active, .icon-btn:active, .screen-action-btn:active,
+    .screen-dest-btn:active, .screen-icon-action:active,
+    .screen-kiosk-btn:active {
+      transform: none;
+    }
+  }
+`;
