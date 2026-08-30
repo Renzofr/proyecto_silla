@@ -1,5 +1,0 @@
-setuptools
-websockets<14,>=13
-
-[test]
-pytest

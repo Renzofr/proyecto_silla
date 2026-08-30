@@ -1,0 +1,48 @@
+# --- Workspace ROS 2 -------------------------------------------------
+# El workspace NO va en el repo: se crea localmente y el paquete ROS
+# vive en su propio repositorio (Renzofr/Silla_ruedas).
+wheel_ws/
+build/
+install/
+log/
+frames_*.gv
+frames_*.pdf
+
+# --- Python ----------------------------------------------------------
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+*.db
+*.sqlite3
+
+# --- Node ------------------------------------------------------------
+node_modules/
+dist/
+.vite/
+npm-debug.log*
+
+# --- Entorno ---------------------------------------------------------
+# .env lleva configuración local; se versiona solo .env.example
+.env
+!.env.example
+
+# --- Editores / sistema ----------------------------------------------
+.idea
+.idea/
+.vscode
+.vscode/
+*.swp
+.DS_Store
+
+# --- Dotfiles de shell (se colaron en el primer commit) ---------------
+# No pertenecen al proyecto: son configuración del usuario.
+.bashrc
+.zshrc
+.profile
+.bash_profile
+.zprofile
+.gitconfig
+.ripgreprc
+.mcp.json

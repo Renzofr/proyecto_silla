@@ -1,5 +1,0 @@
-[console_scripts]
-evitar_obstaculos = silla_ruedas.evitar_obstaculos:main
-mapeo_autonomo = silla_ruedas.mapeo_autonomo:main
-send_goal = silla_ruedas.send_goal:main
-telemetry_bridge = silla_ruedas.telemetry_bridge:main

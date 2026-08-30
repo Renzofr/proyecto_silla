@@ -1,0 +1,64 @@
+# ---------------------------------------------------------------------------
+#  Chair Tracker Vital — aplicacion web completa
+#
+#    cd docker
+#    docker compose up --build     levanta backend + frontend
+#    docker compose down           los detiene
+#
+#  Frontend: http://localhost:5173      Backend: http://localhost:8000/api
+#  Esto NO incluye ROS 2 ni Gazebo: la simulacion tiene su propio entorno
+#  en el repositorio Silla_ruedas.
+# ---------------------------------------------------------------------------
+# Nombre explicito del proyecto. Sin esto, Compose lo deriva del
+# directorio ('docker/') y colisiona con el otro repositorio.
+name: wheelchair-web
+
+services:
+
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend.Dockerfile
+    container_name: chair_tracker_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Codigo en vivo: editar en el host reinicia uvicorn dentro del
+      # contenedor. Los subdirectorios de abajo quedan excluidos con volumenes
+      # anonimos para que el venv y los .pyc del host (Python 3.10) no pisen
+      # el entorno del contenedor (Python 3.12).
+      - ../backend:/app/backend
+      - /app/backend/venv
+      - /app/backend/__pycache__
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/frontend.Dockerfile
+    container_name: chair_tracker_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      # Solo se montan las fuentes. node_modules se queda el del contenedor
+      # (volumen anonimo) porque trae binarios nativos de esbuild compilados
+      # para la imagen, no para el host.
+      - ../frontend/src:/app/src
+      - ../frontend/index.html:/app/index.html
+      - ../frontend/vite.config.js:/app/vite.config.js
+      - /app/node_modules
+    environment:
+      # La resuelve el NAVEGADOR del host, no el contenedor: por eso es
+      # localhost y no "backend".
+      - VITE_API_BASE_URL=http://localhost:8000/api
+    depends_on:
+      - backend

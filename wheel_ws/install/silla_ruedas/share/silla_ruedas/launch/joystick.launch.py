@@ -1,1 +1,0 @@
-/home/renzofr/Proyecto_silla/wheel_ws/build/silla_ruedas/launch/joystick.launch.py
