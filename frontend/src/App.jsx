@@ -185,6 +185,9 @@ function useTelemetry({ mode, running }) {
       }
       case "connection": {
         setConnection(msg.data.state);
+        // El modo lo decide el backend: ROS2_REAL solo cuando hay un bridge
+        // enganchado al canal de ingesta. El frontend no lo adivina.
+        if (msg.data.mode) setMode(msg.data.mode);
         break;
       }
       default:
@@ -1332,17 +1335,20 @@ export default function ChairTrackerVital() {
         <ConnectionBadge connection={telemetry.connection} mode={mode} />
 
         <div className="topbar-actions">
-          <button
+          <span
             className={`mode-toggle ${mode === "SIMULATION" ? "on" : ""}`}
-            onClick={() => setMode((m) => (m === "SIMULATION" ? "ROS2_REAL" : "SIMULATION"))}
-            title="Alternar modo SIMULACIÓN / ROS 2 REAL"
+            title={
+              mode === "SIMULATION"
+                ? "Los datos los genera el simulador interno del backend. Lanza el puente (wheelchair_bridge) para recibir datos reales."
+                : "Un puente ROS 2 está enviando telemetría real."
+            }
           >
-            {mode === "SIMULATION" ? <Play size={13} /> : <WifiOff size={13} />}
-            {mode === "SIMULATION" ? "Simulación activa" : "Esperando ROS 2"}
-          </button>
+            {mode === "SIMULATION" ? <Play size={13} /> : <Wifi size={13} />}
+            {mode === "SIMULATION" ? "Simulación activa" : "ROS 2 conectado"}
+          </span>
 
           {!running ? (
-            <button className="primary-btn" onClick={() => setShowStart(true)} disabled={mode !== "SIMULATION"}>
+            <button className="primary-btn" onClick={() => setShowStart(true)}>
               <Play size={14} /> Iniciar sesión
             </button>
           ) : (

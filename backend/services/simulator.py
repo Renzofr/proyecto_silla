@@ -221,7 +221,10 @@ class TelemetrySimulator:
         )
         await self.on_message({"type": "lidar", "data": lidar.dict()})
 
-        await self.on_message({"type": "connection", "data": {"state": "CONNECTED"}})
+        await self.on_message({
+            "type": "connection",
+            "data": {"state": "CONNECTED", "mode": "SIMULATION"},
+        })
 
     async def _emit_alert(self, type_: AlertType, level: AlertLevel, message: str) -> None:
         alert = AlertItem(type=type_, level=level, message=message)

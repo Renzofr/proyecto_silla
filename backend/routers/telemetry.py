@@ -47,6 +47,19 @@ _simulator.on_message = _tracking_broadcast
 @router.websocket("/ws/telemetry")
 async def telemetry_ws(websocket: WebSocket):
     await ws_manager.connect(websocket)
+
+    # Estado actual nada mas conectar. Sin esto, un cliente que abre la web
+    # cuando el bridge ya estaba conectado no recibiria ningun mensaje
+    # "connection" (solo se emiten al conectar/desconectar el bridge) y se
+    # quedaria mostrando el modo por defecto, que seria falso.
+    await websocket.send_json({
+        "type": "connection",
+        "data": {
+            "state": "CONNECTED" if _bridge_connections else "DISCONNECTED",
+            "mode": "ROS2_REAL" if _bridge_connections else "SIMULATION",
+        },
+    })
+
     try:
         while True:
             # El cliente no necesita enviar nada; el canal es principalmente
@@ -63,7 +76,10 @@ async def telemetry_ingest_ws(websocket: WebSocket):
     await websocket.accept()
     _bridge_connections.add(websocket)
     _simulator.stop()
-    await _tracking_broadcast({"type": "connection", "data": {"state": "CONNECTED"}})
+    await _tracking_broadcast({
+        "type": "connection",
+        "data": {"state": "CONNECTED", "mode": "ROS2_REAL"},
+    })
     try:
         while True:
             message = await websocket.receive_json()
@@ -78,7 +94,10 @@ async def telemetry_ingest_ws(websocket: WebSocket):
     finally:
         _bridge_connections.discard(websocket)
         if not _bridge_connections:
-            await _tracking_broadcast({"type": "connection", "data": {"state": "DISCONNECTED"}})
+            await _tracking_broadcast({
+                "type": "connection",
+                "data": {"state": "DISCONNECTED", "mode": "SIMULATION"},
+            })
 
 
 @router.post("/telemetry/simulation/start")
@@ -147,7 +166,10 @@ def system_status():
     ]
 
     return SystemStatus(
-        ros2_connected=_simulator.is_running() or bool(_bridge_connections),
+        # Solo un bridge real cuenta como ROS conectado. El simulador interno
+        # produce datos identicos pero no implica que haya ningun nodo ROS.
+        ros2_connected=bool(_bridge_connections),
+        simulation_active=_simulator.is_running(),
         websocket_connected=len(ws_manager.active_connections) > 0,
         components=components,
         latency_ms=35.0 if _simulator.is_running() else 0.0,

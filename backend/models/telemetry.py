@@ -192,7 +192,11 @@ class SystemComponentStatus(BaseModel):
 
 
 class SystemStatus(BaseModel):
+    # True solo si hay un bridge ROS 2 enganchado al canal de ingesta.
+    # No confundir con simulation_active: el simulador interno produce datos
+    # sin que exista ningun nodo ROS.
     ros2_connected: bool
+    simulation_active: bool
     websocket_connected: bool
     components: List[SystemComponentStatus]
     latency_ms: float
